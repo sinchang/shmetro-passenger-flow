@@ -25,17 +25,15 @@ function isLastDay (str) {
   return str === '12-31' || str === '12-30'
 }
 
-let isEmpty = false
 let page = 1
 
 ;(async () => {
-  while (!isEmpty) {
+  while (true) {
     let text
     try {
       const { data } = await request(page)
       const cards = data.data.cards
       if (cards.length === 0) {
-        isEmpty = true
         process.exit()
       }
 
