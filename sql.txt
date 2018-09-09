@@ -1,0 +1,4 @@
+CREATE TABLE `flow` (
+	`date`	DATE NOT NULL,
+	`num`	INTEGER NOT NULL
+);
