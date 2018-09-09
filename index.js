@@ -5,13 +5,13 @@ const Database = require('better-sqlite3')
 const db = new Database('flow.db', {})
 const WEIBO_ID = 1742987497
 const REGEX = /【地铁网络客流】(\d{1,})月(\d{1,})日上海地铁总客流为(\d{1,})[\s\S]*/g
-const stmt = db.prepare('INSERT INTO flow VALUES (?, ?)');
+const stmt = db.prepare('INSERT INTO flow VALUES (?, ?)')
 
-function getUrl(page) {
+function getUrl (page) {
   return `https://m.weibo.cn/api/container/getIndex?containerid=100103type%3D61%26q%3D%E5%9C%B0%E9%93%81%E7%BD%91%E7%BB%9C%E5%AE%A2%E6%B5%81+%E4%B8%8A%E6%B5%B7%E5%9C%B0%E9%93%81%E6%80%BB%E5%AE%A2%E6%B5%81%26t%3D0&page_type=searchall&page=${page}`
 }
 
-function request(page) {
+function request (page) {
   const url = getUrl(page)
   return axios.get(url, {
     headers: {
@@ -21,7 +21,7 @@ function request(page) {
   })
 }
 
-function formatDate(str, year) {
+function formatDate (str, year) {
   const arr = str.split('-')
   return `${year}-${arr[0]}-${arr[1]}`
 }
@@ -54,11 +54,11 @@ let page = 1
           stmt.run(date, Number(num))
         }
       })
-    } catch(e) {
+    } catch (e) {
       console.log(e)
       console.log(log)
     }
     console.log(page)
-    page ++
+    page++
   }
 })()
