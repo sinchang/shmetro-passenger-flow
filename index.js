@@ -4,7 +4,7 @@ const axios = require('axios')
 const Database = require('better-sqlite3')
 const db = new Database('flow.db', {})
 const WEIBO_ID = 1742987497
-const REGEX = /【地铁网络客流】(\d{1,})月(\d{1,})日上海地铁总客流为(\d{1,})[\s\S]*/g
+const RE_NUM = /[0-9]+([.]{1}[0-9]+){0,1}/g
 const stmt = db.prepare('INSERT INTO flow VALUES (?, ?)')
 
 function getUrl (page) {
@@ -21,9 +21,8 @@ function request (page) {
   })
 }
 
-function formatDate (str, year) {
-  const arr = str.split('-')
-  return `${year}-${arr[0]}-${arr[1]}`
+function isLastDay (str) {
+  return str === '12-31' || str === '12-30'
 }
 
 let isEmpty = false
@@ -31,7 +30,7 @@ let page = 1
 
 ;(async () => {
   while (!isEmpty) {
-    let log
+    let text
     try {
       const { data } = await request(page)
       const cards = data.data.cards
@@ -41,16 +40,24 @@ let page = 1
       }
 
       cards[0].card_group.forEach(card => {
+        text = card.mblog.text
         if (card.mblog.user.id === WEIBO_ID) {
-          log = card.mblog.text
           const creatdAt = card.mblog.created_at
-          const str = card.mblog.text.replace(REGEX, '$1-$2_$3')
+          const arr = text.match(RE_NUM)
+          const str = `${arr[0]}-${arr[1]}`
           let year = '2018'
           if (creatdAt.split('-').length === 3) {
             year = creatdAt.split('-')[0]
+            if (isLastDay(str)) {
+              year = year - 1
+            }
+          } else {
+            if (isLastDay(str)) {
+              year = '2017'
+            }
           }
-          const date = formatDate(str.split('_')[0], year)
-          const num = str.split('_')[1]
+          const date = `${year}-${str}`
+          const num = arr[2]
           stmt.run(date, Number(num))
         }
       })
