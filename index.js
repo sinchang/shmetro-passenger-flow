@@ -27,7 +27,7 @@ function formatDate(str, year) {
 }
 
 let isEmpty = false
-let page = 98
+let page = 1
 
 ;(async () => {
   while (!isEmpty) {
