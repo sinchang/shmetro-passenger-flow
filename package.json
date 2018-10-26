@@ -19,7 +19,9 @@
   "homepage": "https://github.com/sinchang/shmetro-passenger-flow#readme",
   "dependencies": {
     "axios": "^0.18.0",
-    "better-sqlite3": "^4.1.4"
+    "better-sqlite3": "^4.1.4",
+    "date-fns": "^1.29.0",
+    "sleep": "^5.2.3"
   },
   "devDependencies": {
     "standard": "^12.0.1"
