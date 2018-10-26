@@ -24,10 +24,6 @@ function request (page) {
   })
 }
 
-function isLastDay (str) {
-  return str === '12-31' || str === '12-30'
-}
-
 let page = 1
 
 ;(async () => {
